@@ -1,0 +1,6 @@
+
+State Machine - |soil_moisture_fsm|current_state
+Name current_state.IDLE current_state.CONTROL current_state.MEASURE 
+current_state.IDLE 0 0 0 
+current_state.MEASURE 1 0 1 
+current_state.CONTROL 1 1 0 
