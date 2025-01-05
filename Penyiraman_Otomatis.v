@@ -523,11 +523,11 @@ module KEYPAD4x4 (
                 case (category)
                     4'd1: begin // Soil dry
 							  if (new_value > 0 && new_value < PARAM_SOIL_MOIST) begin
-									force NEW_PARAM_SOIL_DRY = new_value;
-									NEW_PARAM_SOIL_DRY = new_value;
+									 NEW_PARAM_SOIL_DRY = new_value;
+									
 									update_soil_dry = 1'b0;
 									#10;
-									release NEW_PARAM_SOIL_DRY;
+									 
 									updated = 1'b1;
 							  end
 						 end
@@ -536,32 +536,32 @@ module KEYPAD4x4 (
 									if (new_value > PARAM_SOIL_WET) begin
 										 // Ignore invalid value
 									end else begin
-										 force NEW_PARAM_SOIL_MOIST = new_value;
-										 NEW_PARAM_SOIL_MOIST = new_value;
+										  NEW_PARAM_SOIL_MOIST = new_value;
+										 
 										 update_soil_moist <= 1'b1;
 										 #10;
-										 release NEW_PARAM_SOIL_MOIST;
+										  
 										 updated = 1'b1;
 									end
 							  end
 						 end
 						 4'd3: begin // Soil wet
 							  if (new_value > 0 && new_value > PARAM_SOIL_MOIST) begin
-									force NEW_PARAM_SOIL_WET = new_value;
-									NEW_PARAM_SOIL_WET = new_value;
+									 NEW_PARAM_SOIL_WET = new_value;
+									
 									update_soil_wet <= 1'b1;
 									#10;
-									release NEW_PARAM_SOIL_WET;
+									
 									updated = 1'b1;
 							  end
 						 end
 						 4'd4: begin // Temp cold
 							  if (new_value > 0 && new_value < PARAM_TEMP_WARM) begin
-									force NEW_PARAM_TEMP_COLD = new_value;
-									NEW_PARAM_TEMP_COLD = new_value;
+									 NEW_PARAM_TEMP_COLD = new_value;
+									
 									update_temp_cold <= 1'b1;
 									#10;
-									release NEW_PARAM_TEMP_COLD;
+									
 									updated = 1'b1;
 							  end
 						 end
@@ -570,42 +570,42 @@ module KEYPAD4x4 (
 									if (new_value > PARAM_TEMP_HOT) begin
 										 // Ignore invalid value
 									end else begin
-										 force NEW_PARAM_TEMP_WARM = new_value;
-										 NEW_PARAM_TEMP_WARM = new_value;
+										  NEW_PARAM_TEMP_WARM = new_value;
+										 
 										 update_temp_warm <= 1'b1;
 										 #10;
-										 release NEW_PARAM_TEMP_WARM;
+										  
 										 updated = 1'b1;
 									end
 							  end
 						 end
 						 4'd6: begin // Temp hot
 							  if (new_value > 0 && new_value > PARAM_TEMP_WARM) begin
-									force NEW_PARAM_TEMP_HOT = new_value;
-									NEW_PARAM_TEMP_HOT = new_value;
+									 NEW_PARAM_TEMP_HOT = new_value;
+									
 									update_temp_hot <= 1'b1;
 									#10;
-									release NEW_PARAM_TEMP_HOT;
+									 
 									updated = 1'b1;
 							  end
 						 end
 						 4'd7: begin // Rain no
 							  if (new_value > 0 && new_value < PARAM_RAIN_YES) begin
-									force NEW_PARAM_RAIN_NO = new_value;
-									NEW_PARAM_RAIN_NO = new_value;
+									 NEW_PARAM_RAIN_NO = new_value;
+									
 									update_rain_no <= 1'b1;
 									#10;
-									release NEW_PARAM_RAIN_NO;
+									
 									updated = 1'b1;
 							  end
 						 end
 						 4'd8: begin // Rain yes
 							  if (new_value >= 0 && new_value > PARAM_RAIN_NO) begin
-									force NEW_PARAM_RAIN_YES = new_value;
-									NEW_PARAM_RAIN_YES = new_value;
+									 NEW_PARAM_RAIN_YES = new_value;
+									
 									update_rain_yes <= 1'b1;
 									#10;
-									release NEW_PARAM_RAIN_YES;
+									 
 									updated = 1'b1;
 							  end
 						 end
