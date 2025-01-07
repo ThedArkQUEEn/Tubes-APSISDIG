@@ -34,14 +34,14 @@ module FUZZIFIKASI #(
     output reg [9:0] PARAM_RAIN_YES
 );
 
-    reg [9:0] DEFAULT_SOIL_DRY = 10'd400;
-    reg [9:0] DEFAULT_SOIL_MOIST = 10'd600;
-    reg [9:0] DEFAULT_SOIL_WET = 10'd800;
-    reg [9:0] DEFAULT_TEMP_COLD = 10'd300;
-    reg [9:0] DEFAULT_TEMP_WARM = 10'd500;
-    reg [9:0] DEFAULT_TEMP_HOT = 10'd700;
-    reg [9:0] DEFAULT_RAIN_NO = 10'd100;
-    reg [9:0] DEFAULT_RAIN_YES = 10'd400;
+    localparam [9:0] DEFAULT_SOIL_DRY = 10'd400;
+    localparam [9:0] DEFAULT_SOIL_MOIST = 10'd600;
+    localparam [9:0] DEFAULT_SOIL_WET = 10'd800;
+    localparam [9:0] DEFAULT_TEMP_COLD = 10'd300;
+    localparam [9:0] DEFAULT_TEMP_WARM = 10'd500;
+    localparam [9:0] DEFAULT_TEMP_HOT = 10'd700;
+    localparam [9:0] DEFAULT_RAIN_NO = 10'd100;
+    localparam [9:0] DEFAULT_RAIN_YES = 10'd400;
 
     initial begin
         PARAM_SOIL_DRY = DEFAULT_SOIL_DRY;
