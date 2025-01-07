@@ -1,13 +1,5 @@
 module FUZZIFIKASI #(
-    parameter DATA_WIDTH = 10,
-    parameter DEFAULT_SOIL_DRY = 10'd400,   // Dry soil threshold (default)
-    parameter DEFAULT_SOIL_MOIST = 10'd600, // Moist soil threshold (default)
-    parameter DEFAULT_SOIL_WET = 10'd800,   // Wet soil threshold (default)
-    parameter DEFAULT_TEMP_COLD = 10'd300,  // Cold temperature threshold (default)
-    parameter DEFAULT_TEMP_WARM = 10'd500,  // Warm temperature threshold (default)
-    parameter DEFAULT_TEMP_HOT = 10'd700,   // Hot temperature threshold (default)
-    parameter DEFAULT_RAIN_NO = 10'd100,    // Low rain threshold (default)
-    parameter DEFAULT_RAIN_YES = 10'd400    // High rain threshold (default)
+    parameter DATA_WIDTH = 10
 )(
     input clk,
     input reset,
@@ -41,6 +33,16 @@ module FUZZIFIKASI #(
     output reg [9:0] PARAM_RAIN_NO,
     output reg [9:0] PARAM_RAIN_YES
 );
+
+    // Parameter initialization
+    reg [9:0] DEFAULT_SOIL_DRY = 10'd400;   // Dry soil threshold (default)
+    reg [9:0] DEFAULT_SOIL_MOIST = 10'd600; // Moist soil threshold (default)
+    reg [9:0] DEFAULT_SOIL_WET = 10'd800;   // Wet soil threshold (default)
+    reg [9:0] DEFAULT_TEMP_COLD = 10'd300;  // Cold temperature threshold (default)
+    reg [9:0] DEFAULT_TEMP_WARM = 10'd500;  // Warm temperature threshold (default)
+    reg [9:0] DEFAULT_TEMP_HOT = 10'd700;   // Hot temperature threshold (default)
+    reg [9:0] DEFAULT_RAIN_NO = 10'd100;    // Low rain threshold (default)
+    reg [9:0] DEFAULT_RAIN_YES = 10'd400;   // High rain threshold (default)
 
     initial begin
         PARAM_SOIL_DRY = DEFAULT_SOIL_DRY;
@@ -90,7 +92,6 @@ module FUZZIFIKASI #(
             end
         end
     end
-
     // Fuzzy memberships
     reg [DATA_WIDTH-1:0] mu_soil_dry, mu_soil_moist, mu_soil_wet;
     reg [DATA_WIDTH-1:0] mu_temp_cold, mu_temp_warm, mu_temp_hot;
