@@ -43,18 +43,8 @@ module FUZZIFIKASI #(
     localparam [9:0] DEFAULT_RAIN_NO = 10'd100;
     localparam [9:0] DEFAULT_RAIN_YES = 10'd400;
 
-    initial begin
-        PARAM_SOIL_DRY = DEFAULT_SOIL_DRY;
-        PARAM_SOIL_MOIST = DEFAULT_SOIL_MOIST;
-        PARAM_SOIL_WET = DEFAULT_SOIL_WET;
-        PARAM_TEMP_COLD = DEFAULT_TEMP_COLD;
-        PARAM_TEMP_WARM = DEFAULT_TEMP_WARM;
-        PARAM_TEMP_HOT = DEFAULT_TEMP_HOT;
-        PARAM_RAIN_NO = DEFAULT_RAIN_NO;
-        PARAM_RAIN_YES = DEFAULT_RAIN_YES;
-    end
-
-    always @(*) begin
+    // Reset logic for parameter initialization
+    always @(posedge clk or posedge reset) begin
         if (reset) begin
             PARAM_SOIL_DRY <= DEFAULT_SOIL_DRY;
             PARAM_SOIL_MOIST <= DEFAULT_SOIL_MOIST;
@@ -65,41 +55,31 @@ module FUZZIFIKASI #(
             PARAM_RAIN_NO <= DEFAULT_RAIN_NO;
             PARAM_RAIN_YES <= DEFAULT_RAIN_YES;
         end else begin
-            if (update_soil_dry) begin
-                PARAM_SOIL_DRY <= new_soil_dry;
-            end
-            if (update_soil_moist) begin
-                PARAM_SOIL_MOIST <= new_soil_moist;
-            end
-            if (update_soil_wet) begin
-                PARAM_SOIL_WET <= new_soil_wet;
-            end
-            if (update_temp_cold) begin
-                PARAM_TEMP_COLD <= new_temp_cold;
-            end
-            if (update_temp_warm) begin
-                PARAM_TEMP_WARM <= new_temp_warm;
-            end
-            if (update_temp_hot) begin
-                PARAM_TEMP_HOT <= new_temp_hot;
-            end
-            if (update_rain_no) begin
-                PARAM_RAIN_NO <= new_rain_no;
-            end
-            if (update_rain_yes) begin
-                PARAM_RAIN_YES <= new_rain_yes;
-            end
+            if (update_soil_dry) PARAM_SOIL_DRY <= new_soil_dry;
+            if (update_soil_moist) PARAM_SOIL_MOIST <= new_soil_moist;
+            if (update_soil_wet) PARAM_SOIL_WET <= new_soil_wet;
+            if (update_temp_cold) PARAM_TEMP_COLD <= new_temp_cold;
+            if (update_temp_warm) PARAM_TEMP_WARM <= new_temp_warm;
+            if (update_temp_hot) PARAM_TEMP_HOT <= new_temp_hot;
+            if (update_rain_no) PARAM_RAIN_NO <= new_rain_no;
+            if (update_rain_yes) PARAM_RAIN_YES <= new_rain_yes;
         end
     end
-	 
+
     reg [DATA_WIDTH-1:0] mu_soil_dry, mu_soil_moist, mu_soil_wet;
     reg [DATA_WIDTH-1:0] mu_temp_cold, mu_temp_warm, mu_temp_hot;
     reg [DATA_WIDTH-1:0] mu_rain_no, mu_rain_yes;
-    
-    integer max_rule_index;
-    reg [DATA_WIDTH-1:0] max_rule_value;
 
+    reg [DATA_WIDTH-1:0] rule[17:0];
+    reg [7:0] nilai_penyiraman[3:0];
+    reg [DATA_WIDTH+7:0] numerator, denominator;
+    reg [DATA_WIDTH+7:0] weighted_value;
+    integer i;
+    reg [7:0] irrigation_values[17:0];
+
+    // Fuzzification logic
     always @(*) begin
+        // Soil membership functions
         if (soil_digital <= PARAM_SOIL_DRY) begin
             mu_soil_dry = 1023; mu_soil_moist = 0; mu_soil_wet = 0;
         end else if (soil_digital <= PARAM_SOIL_MOIST) begin
@@ -114,6 +94,7 @@ module FUZZIFIKASI #(
             mu_soil_dry = 0; mu_soil_moist = 0; mu_soil_wet = 1023;
         end
 
+        // Temperature membership functions
         if (dht11_digital <= PARAM_TEMP_COLD) begin
             mu_temp_cold = 1023; mu_temp_warm = 0; mu_temp_hot = 0;
         end else if (dht11_digital <= PARAM_TEMP_WARM) begin
@@ -128,6 +109,7 @@ module FUZZIFIKASI #(
             mu_temp_cold = 0; mu_temp_warm = 0; mu_temp_hot = 1023;
         end
 
+        // Rain membership functions
         if (rain_digital <= PARAM_RAIN_NO) begin
             mu_rain_no = 1023; mu_rain_yes = 0;
         end else if (rain_digital <= PARAM_RAIN_YES) begin
@@ -138,15 +120,10 @@ module FUZZIFIKASI #(
         end
     end
 
-    reg [DATA_WIDTH-1:0] rule[17:0];
-    reg [7:0] nilai_penyiraman[3:0];
+    // Rule evaluation and defuzzification logic (trimmed for synthesis efficiency)
     reg [DATA_WIDTH+7:0] numerator, denominator;
-    reg [DATA_WIDTH+7:0] weighted_value;
-    integer i;
-	 reg [7:0] irrigation_values[17:0];
-
-    always @(*) begin
-    irrigation_values[0] = 8'd0;
+    always @(posedge clk or posedge reset) begin
+        irrigation_values[0] = 8'd0;
     irrigation_values[1] = 8'd0;
     irrigation_values[2] = 8'd10;
     irrigation_values[3] = 8'd0;
