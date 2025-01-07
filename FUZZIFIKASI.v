@@ -90,22 +90,6 @@ module FUZZIFIKASI #(
             end
         end
     end
-	 	 
-
-    function [DATA_WIDTH-1:0] min_two;
-        input [DATA_WIDTH-1:0] a, b;
-        begin
-            min_two = (a < b) ? a : b;
-        end
-    endfunction
-
-    // Function to compute the minimum of three values
-    function [DATA_WIDTH-1:0] min_three;
-        input [DATA_WIDTH-1:0] a, b, c;
-        begin
-            min_three = min_two(min_two(a, b), c);
-        end
-    endfunction
 
     // Fuzzy memberships
     reg [DATA_WIDTH-1:0] mu_soil_dry, mu_soil_moist, mu_soil_wet;
@@ -194,24 +178,24 @@ module FUZZIFIKASI #(
     for (i = 0; i < 18; i = i + 1) begin
         rule[i] = 0;
         case (i)
-            0: rule[i] = min_three(mu_soil_dry, mu_temp_cold, mu_rain_no);
-            1: rule[i] = min_three(mu_soil_dry, mu_temp_cold, mu_rain_yes);
-            2: rule[i] = min_three(mu_soil_dry, mu_temp_warm, mu_rain_no);
-            3: rule[i] = min_three(mu_soil_dry, mu_temp_warm, mu_rain_yes);
-            4: rule[i] = min_three(mu_soil_dry, mu_temp_hot, mu_rain_no);
-            5: rule[i] = min_three(mu_soil_dry, mu_temp_hot, mu_rain_yes);
-            6: rule[i] = min_three(mu_soil_moist, mu_temp_cold, mu_rain_no);
-            7: rule[i] = min_three(mu_soil_moist, mu_temp_cold, mu_rain_yes);
-            8: rule[i] = min_three(mu_soil_moist, mu_temp_warm, mu_rain_no);
-            9: rule[i] = min_three(mu_soil_moist, mu_temp_warm, mu_rain_yes);
-            10: rule[i] = min_three(mu_soil_moist, mu_temp_hot, mu_rain_no);
-            11: rule[i] = min_three(mu_soil_moist, mu_temp_hot, mu_rain_yes);
-            12: rule[i] = min_three(mu_soil_wet, mu_temp_cold, mu_rain_no);
-            13: rule[i] = min_three(mu_soil_wet, mu_temp_cold, mu_rain_yes);
-            14: rule[i] = min_three(mu_soil_wet, mu_temp_warm, mu_rain_no);
-            15: rule[i] = min_three(mu_soil_wet, mu_temp_warm, mu_rain_yes);
-            16: rule[i] = min_three(mu_soil_wet, mu_temp_hot, mu_rain_no);
-            17: rule[i] = min_three(mu_soil_wet, mu_temp_hot, mu_rain_yes);
+            0: rule[i] = (mu_soil_dry < mu_temp_cold) ? ((mu_soil_dry < mu_rain_no) ? mu_soil_dry : mu_rain_no) : ((mu_temp_cold < mu_rain_no) ? mu_temp_cold : mu_rain_no);
+            1: rule[i] = (mu_soil_dry < mu_temp_cold) ? ((mu_soil_dry < mu_rain_yes) ? mu_soil_dry : mu_rain_yes) : ((mu_temp_cold < mu_rain_yes) ? mu_temp_cold : mu_rain_yes);
+            2: rule[i] = (mu_soil_dry < mu_temp_warm) ? ((mu_soil_dry < mu_rain_no) ? mu_soil_dry : mu_rain_no) : ((mu_temp_warm < mu_rain_no) ? mu_temp_warm : mu_rain_no);
+            3: rule[i] = (mu_soil_dry < mu_temp_warm) ? ((mu_soil_dry < mu_rain_yes) ? mu_soil_dry : mu_rain_yes) : ((mu_temp_warm < mu_rain_yes) ? mu_temp_warm : mu_rain_yes);
+            4: rule[i] = (mu_soil_dry < mu_temp_hot) ? ((mu_soil_dry < mu_rain_no) ? mu_soil_dry : mu_rain_no) : ((mu_temp_hot < mu_rain_no) ? mu_temp_hot : mu_rain_no);
+            5: rule[i] = (mu_soil_dry < mu_temp_hot) ? ((mu_soil_dry < mu_rain_yes) ? mu_soil_dry : mu_rain_yes) : ((mu_temp_hot < mu_rain_yes) ? mu_temp_hot : mu_rain_yes);
+            6: rule[i] = (mu_soil_moist < mu_temp_cold) ? ((mu_soil_moist < mu_rain_no) ? mu_soil_moist : mu_rain_no) : ((mu_temp_cold < mu_rain_no) ? mu_temp_cold : mu_rain_no);
+            7: rule[i] = (mu_soil_moist < mu_temp_cold) ? ((mu_soil_moist < mu_rain_yes) ? mu_soil_moist : mu_rain_yes) : ((mu_temp_cold < mu_rain_yes) ? mu_temp_cold : mu_rain_yes);
+            8: rule[i] = (mu_soil_moist < mu_temp_warm) ? ((mu_soil_moist < mu_rain_no) ? mu_soil_moist : mu_rain_no) : ((mu_temp_warm < mu_rain_no) ? mu_temp_warm : mu_rain_no);
+            9: rule[i] = (mu_soil_moist < mu_temp_warm) ? ((mu_soil_moist < mu_rain_yes) ? mu_soil_moist : mu_rain_yes) : ((mu_temp_warm < mu_rain_yes) ? mu_temp_warm : mu_rain_yes);
+            10: rule[i] = (mu_soil_moist < mu_temp_hot) ? ((mu_soil_moist < mu_rain_no) ? mu_soil_moist : mu_rain_no) : ((mu_temp_hot < mu_rain_no) ? mu_temp_hot : mu_rain_no);
+            11: rule[i] = (mu_soil_moist < mu_temp_hot) ? ((mu_soil_moist < mu_rain_yes) ? mu_soil_moist : mu_rain_yes) : ((mu_temp_hot < mu_rain_yes) ? mu_temp_hot : mu_rain_yes);
+            12: rule[i] = (mu_soil_wet < mu_temp_cold) ? ((mu_soil_wet < mu_rain_no) ? mu_soil_wet : mu_rain_no) : ((mu_temp_cold < mu_rain_no) ? mu_temp_cold : mu_rain_no);
+            13: rule[i] = (mu_soil_wet < mu_temp_cold) ? ((mu_soil_wet < mu_rain_yes) ? mu_soil_wet : mu_rain_yes) : ((mu_temp_cold < mu_rain_yes) ? mu_temp_cold : mu_rain_yes);
+            14: rule[i] = (mu_soil_wet < mu_temp_warm) ? ((mu_soil_wet < mu_rain_no) ? mu_soil_wet : mu_rain_no) : ((mu_temp_warm < mu_rain_no) ? mu_temp_warm : mu_rain_no);
+            15: rule[i] = (mu_soil_wet < mu_temp_warm) ? ((mu_soil_wet < mu_rain_yes) ? mu_soil_wet : mu_rain_yes) : ((mu_temp_warm < mu_rain_yes) ? mu_temp_warm : mu_rain_yes);
+            16: rule[i] = (mu_soil_wet < mu_temp_hot) ? ((mu_soil_wet < mu_rain_no) ? mu_soil_wet : mu_rain_no) : ((mu_temp_hot < mu_rain_no) ? mu_temp_hot : mu_rain_no);
+            17: rule[i] = (mu_soil_wet < mu_temp_hot) ? ((mu_soil_wet < mu_rain_yes) ? mu_soil_wet : mu_rain_yes) : ((mu_temp_hot < mu_rain_yes) ? mu_temp_hot : mu_rain_yes);
         endcase
 
         numerator = numerator + (rule[i] * irrigation_values[i]);
