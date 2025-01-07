@@ -1,3 +1,64 @@
+module SOIL_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
+    input clk,
+    input reset,
+    input [15:0] analog_voltage_mv,
+    input sensor_enable,
+    output reg [RESOLUTION-1:0] digital_output
+);
+
+    localparam integer STEP_SIZE = VREF_MV / (1 << RESOLUTION);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            digital_output <= 0;
+        end else if (sensor_enable) begin
+            digital_output <= (analog_voltage_mv >= VREF_MV) ? 
+                              ((1 << RESOLUTION) - 1) : 
+                              (analog_voltage_mv / STEP_SIZE);
+        end
+    end
+endmodule
+
+module DHT11_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
+    input clk,
+    input reset,
+    input [15:0] analog_voltage_mv,
+	 input sensor_enable,
+    output reg [RESOLUTION-1:0] digital_output
+);
+    localparam integer STEP_SIZE = VREF_MV / (1 << RESOLUTION);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            digital_output <= 0;
+        end else if (sensor_enable) begin
+            digital_output <= (analog_voltage_mv >= VREF_MV) ? 
+                              ((1 << RESOLUTION) - 1) : 
+                              (analog_voltage_mv / STEP_SIZE);
+        end
+    end
+endmodule
+
+module RAIN_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
+    input clk,
+    input reset,
+    input [15:0] analog_voltage_mv,
+	 input sensor_enable,
+    output reg [RESOLUTION-1:0] digital_output
+);
+    localparam integer STEP_SIZE = VREF_MV / (1 << RESOLUTION);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            digital_output <= 0;
+        end else if (sensor_enable) begin
+            digital_output <= (analog_voltage_mv >= VREF_MV) ? 
+                              ((1 << RESOLUTION) - 1) : 
+                              (analog_voltage_mv / STEP_SIZE);
+        end
+    end
+endmodule
+
 module ADC_SENSOR #(parameter RESOLUTION = 10, VREF_MV = 5000)(
     input clk,
     input reset,
@@ -35,54 +96,4 @@ module ADC_SENSOR #(parameter RESOLUTION = 10, VREF_MV = 5000)(
         .sensor_enable(sensor_enable)
     );
 
-endmodule
-
-module SOIL_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
-    input clk,
-    input reset,
-    input [15:0] analog_voltage_mv,
-    input sensor_enable,
-    output reg [RESOLUTION-1:0] digital_output
-);
-
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            digital_output <= 0;
-        end else if (sensor_enable) begin
-            digital_output <= (analog_voltage_mv * (2**RESOLUTION - 1)) / VREF_MV;
-        end
-    end
-
-endmodule
-
-module DHT11_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
-    input clk,
-    input reset,
-    input [15:0] analog_voltage_mv,
-	 input sensor_enable,
-    output reg [RESOLUTION-1:0] digital_output
-);
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            digital_output <= 0;
-        end else if (sensor_enable) begin
-            digital_output <= (analog_voltage_mv * ((1 << RESOLUTION) - 1)) / VREF_MV;
-        end
-    end
-endmodule
-
-module RAIN_ADC #(parameter RESOLUTION = 10, VREF_MV = 5000)(
-    input clk,
-    input reset,
-    input [15:0] analog_voltage_mv,
-	 input sensor_enable,
-    output reg [RESOLUTION-1:0] digital_output
-);
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            digital_output <= 0;
-        end else if (sensor_enable) begin
-            digital_output <= (analog_voltage_mv * ((1 << RESOLUTION) - 1)) / VREF_MV;
-        end
-    end
 endmodule
