@@ -19,10 +19,10 @@ module FUZZIFIKASI #(
     input update_temp_hot,
     input update_rain_no,
     input update_rain_yes,
-    input [DATA_WIDTH-1:0] soil_digital,        // Digital soil moisture data
-    input [DATA_WIDTH-1:0] dht11_digital,        // Digital temperature data
-    input [DATA_WIDTH-1:0] rain_digital,        // Digital rain data
-    output reg [7:0] irrigation_time,           // Irrigation time in seconds
+    input [DATA_WIDTH-1:0] soil_digital,
+    input [DATA_WIDTH-1:0] dht11_digital,
+    input [DATA_WIDTH-1:0] rain_digital,  
+    output reg [7:0] irrigation_time,
     output reg rain_present,
     output reg [9:0] PARAM_SOIL_DRY,
     output reg [9:0] PARAM_SOIL_MOIST,
@@ -34,15 +34,14 @@ module FUZZIFIKASI #(
     output reg [9:0] PARAM_RAIN_YES
 );
 
-    // Parameter initialization
-    reg [9:0] DEFAULT_SOIL_DRY = 10'd400;   // Dry soil threshold (default)
-    reg [9:0] DEFAULT_SOIL_MOIST = 10'd600; // Moist soil threshold (default)
-    reg [9:0] DEFAULT_SOIL_WET = 10'd800;   // Wet soil threshold (default)
-    reg [9:0] DEFAULT_TEMP_COLD = 10'd300;  // Cold temperature threshold (default)
-    reg [9:0] DEFAULT_TEMP_WARM = 10'd500;  // Warm temperature threshold (default)
-    reg [9:0] DEFAULT_TEMP_HOT = 10'd700;   // Hot temperature threshold (default)
-    reg [9:0] DEFAULT_RAIN_NO = 10'd100;    // Low rain threshold (default)
-    reg [9:0] DEFAULT_RAIN_YES = 10'd400;   // High rain threshold (default)
+    reg [9:0] DEFAULT_SOIL_DRY = 10'd400;
+    reg [9:0] DEFAULT_SOIL_MOIST = 10'd600;
+    reg [9:0] DEFAULT_SOIL_WET = 10'd800;
+    reg [9:0] DEFAULT_TEMP_COLD = 10'd300;
+    reg [9:0] DEFAULT_TEMP_WARM = 10'd500;
+    reg [9:0] DEFAULT_TEMP_HOT = 10'd700;
+    reg [9:0] DEFAULT_RAIN_NO = 10'd100;
+    reg [9:0] DEFAULT_RAIN_YES = 10'd400;
 
     initial begin
         PARAM_SOIL_DRY = DEFAULT_SOIL_DRY;
@@ -55,7 +54,7 @@ module FUZZIFIKASI #(
         PARAM_RAIN_YES = DEFAULT_RAIN_YES;
     end
 
-    always @(posedge clk or posedge reset) begin
+    always @(*) begin
         if (reset) begin
             PARAM_SOIL_DRY <= DEFAULT_SOIL_DRY;
             PARAM_SOIL_MOIST <= DEFAULT_SOIL_MOIST;
@@ -92,18 +91,15 @@ module FUZZIFIKASI #(
             end
         end
     end
-    // Fuzzy memberships
+	 
     reg [DATA_WIDTH-1:0] mu_soil_dry, mu_soil_moist, mu_soil_wet;
     reg [DATA_WIDTH-1:0] mu_temp_cold, mu_temp_warm, mu_temp_hot;
     reg [DATA_WIDTH-1:0] mu_rain_no, mu_rain_yes;
     
-    // Declare variables for max rule
     integer max_rule_index;
     reg [DATA_WIDTH-1:0] max_rule_value;
 
-    // Fuzzification
     always @(*) begin
-        // Soil moisture membership
         if (soil_digital <= PARAM_SOIL_DRY) begin
             mu_soil_dry = 1023; mu_soil_moist = 0; mu_soil_wet = 0;
         end else if (soil_digital <= PARAM_SOIL_MOIST) begin
@@ -118,7 +114,6 @@ module FUZZIFIKASI #(
             mu_soil_dry = 0; mu_soil_moist = 0; mu_soil_wet = 1023;
         end
 
-        // Temperature membership
         if (dht11_digital <= PARAM_TEMP_COLD) begin
             mu_temp_cold = 1023; mu_temp_warm = 0; mu_temp_hot = 0;
         end else if (dht11_digital <= PARAM_TEMP_WARM) begin
@@ -133,7 +128,6 @@ module FUZZIFIKASI #(
             mu_temp_cold = 0; mu_temp_warm = 0; mu_temp_hot = 1023;
         end
 
-        // Rain membership
         if (rain_digital <= PARAM_RAIN_NO) begin
             mu_rain_no = 1023; mu_rain_yes = 0;
         end else if (rain_digital <= PARAM_RAIN_YES) begin
@@ -152,24 +146,24 @@ module FUZZIFIKASI #(
 	 reg [7:0] irrigation_values[17:0];
 
     always @(*) begin
-    irrigation_values[0] = 8'd0;  // Rule 0: No irrigation
-    irrigation_values[1] = 8'd0;  // Rule 1: No irrigation
-    irrigation_values[2] = 8'd10; // Rule 2: Light irrigation
-    irrigation_values[3] = 8'd0; // Rule 3: Light irrigation
-    irrigation_values[4] = 8'd45; // Rule 4: Moderate irrigation
-    irrigation_values[5] = 8'd0; // Rule 5: High irrigation
-    irrigation_values[6] = 8'd0;  // Rule 6: No irrigation
-    irrigation_values[7] = 8'd0;  // Rule 7: No irrigation
-    irrigation_values[8] = 8'd10; // Rule 8: Light irrigation
-    irrigation_values[9] = 8'd0; // Rule 9: Light irrigation
-    irrigation_values[10] = 8'd45; // Rule 10: Moderate irrigation
-    irrigation_values[11] = 8'd0; // Rule 11: High irrigation
-    irrigation_values[12] = 8'd0;  // Rule 12: No irrigation
-    irrigation_values[13] = 8'd0;  // Rule 13: No irrigation
-    irrigation_values[14] = 8'd10; // Rule 14: Light irrigation
-    irrigation_values[15] = 8'd0; // Rule 15: Light irrigation
-    irrigation_values[16] = 8'd30; // Rule 16: Moderate irrigation
-    irrigation_values[17] = 8'd0; // Rule 17: Moderate irrigation
+    irrigation_values[0] = 8'd0;
+    irrigation_values[1] = 8'd0;
+    irrigation_values[2] = 8'd10;
+    irrigation_values[3] = 8'd0;
+    irrigation_values[4] = 8'd45;
+    irrigation_values[5] = 8'd0;
+    irrigation_values[6] = 8'd0;
+    irrigation_values[7] = 8'd0;
+    irrigation_values[8] = 8'd10;
+    irrigation_values[9] = 8'd0;
+    irrigation_values[10] = 8'd45;
+    irrigation_values[11] = 8'd0;
+    irrigation_values[12] = 8'd0;
+    irrigation_values[13] = 8'd0;
+    irrigation_values[14] = 8'd10;
+    irrigation_values[15] = 8'd0;
+    irrigation_values[16] = 8'd30;
+    irrigation_values[17] = 8'd0;
 
     numerator = 0;
     denominator = 0;
