@@ -8,7 +8,7 @@ module Penyiraman_Otomatis (
     output reg watering_timer
 );
 
-    reg [7:0] timer_count;
+    reg timer_count;
     reg irrigation_active;
 	 
     always @(posedge clk or posedge reset) begin
@@ -44,5 +44,4 @@ module Penyiraman_Otomatis (
             end
         end
     end
-
 endmodule
