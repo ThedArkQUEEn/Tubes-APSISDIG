@@ -1,11 +1,11 @@
 module Penyiraman_Otomatis (
     input clk,
     input reset,
-    input [7:0] irrigation_time,
+    input irrigation_time,
     output reg pump_on,
     output reg sensor_enable,
     output reg watering_in_progress,
-    output reg [7:0] watering_timer
+    output reg watering_timer
 );
 
     reg [7:0] timer_count;
